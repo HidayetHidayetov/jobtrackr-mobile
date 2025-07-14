@@ -1,16 +1,56 @@
-# mobile
+# JobTrackr Mobile
 
-A new Flutter project.
+A modern Flutter application for tracking job applications, built with clean architecture and best practices. This app connects to a Laravel backend and provides a seamless experience for authenticated users to manage and monitor their job applications.
+
+## Features
+- Clean and scalable project structure
+- Provider for state management
+- Dio for robust HTTP networking
+- Shared Preferences for secure local storage
+- Modern UI with flutter_hooks, google_fonts, and flutter_easyloading
+- Android & iOS support
+
+## Tech Stack
+- **Flutter** (latest stable)
+- **State Management:** provider
+- **HTTP Client:** dio
+- **Local Storage:** shared_preferences
+- **UI Kit:** flutter_hooks, flutter_easyloading, google_fonts
+- **Backend:** Laravel 12 (REST API)
+
+## Project Structure
+```
+lib/
+├── core/         # App-wide utilities, themes, constants
+├── models/       # Data models (User, Application, etc.)
+├── services/     # API, storage, and business logic
+├── providers/    # State management (Provider/ChangeNotifier)
+├── screens/      # UI screens (Login, Home, etc.)
+├── widgets/      # Reusable UI components
+├── routes/       # Navigation and route management
+└── main.dart     # App entry point
+```
 
 ## Getting Started
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/HidayetHidayetov/jobtrackr-mobile.git
+   cd jobtrackr-mobile
+   ```
+2. **Install dependencies:**
+   ```bash
+   flutter pub get
+   ```
+3. **Run the app:**
+   - On emulator or real device:
+     ```bash
+     flutter run
+     ```
 
-This project is a starting point for a Flutter application.
+## Contribution
+- Please use feature branches and open pull requests for any changes.
+- Follow the existing code style and structure.
 
-A few resources to get you started if this is your first Flutter project:
+---
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+> Designed and maintained with best practices for scalability and maintainability. 
