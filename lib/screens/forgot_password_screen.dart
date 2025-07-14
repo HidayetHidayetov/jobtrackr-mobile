@@ -1,38 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../providers/auth_provider.dart';
+import '../providers/auth_provider.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class ForgotPasswordScreen extends StatefulWidget {
+  const ForgotPasswordScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  bool _obscurePassword = true;
 
   @override
   void dispose() {
     _emailController.dispose();
-    _passwordController.dispose();
     super.dispose();
   }
 
-  Future<void> _onLogin() async {
+  Future<void> _onSubmit() async {
     if (_formKey.currentState?.validate() ?? false) {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      final success = await authProvider.login(
-        _emailController.text.trim(),
-        _passwordController.text.trim(),
-      );
+      final success =
+          await authProvider.forgotPassword(_emailController.text.trim());
       if (success) {
-        Navigator.pushReplacementNamed(context, '/home');
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Success'),
+            content: const Text('Password reset link sent to your email.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
       } else {
-        final error = authProvider.error ?? 'Giriş uğursuz oldu';
+        final error = authProvider.error ?? 'Failed to send reset link';
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(error)),
         );
@@ -46,7 +53,6 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          // Gradient + wave background
           Positioned.fill(
             child: Container(
               decoration: const BoxDecoration(
@@ -58,7 +64,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
-          // Custom wave overlay (optional, for more realism)
           Positioned(
             top: -100,
             left: -100,
@@ -70,7 +75,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
-          // Centered card
           Center(
             child: SingleChildScrollView(
               child: Container(
@@ -95,17 +99,22 @@ class _LoginScreenState extends State<LoginScreen> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const Text(
-                        'LOGIN',
+                        'Forgot Password',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: 32,
+                          fontSize: 28,
                           fontWeight: FontWeight.bold,
-                          letterSpacing: 2,
+                          letterSpacing: 1.5,
                           color: Color(0xFF222B45),
                         ),
                       ),
                       const SizedBox(height: 32),
-                      // Email
+                      Text(
+                        'Enter your email address and we will send you a link to reset your password.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 16, color: Colors.black54),
+                      ),
+                      const SizedBox(height: 24),
                       TextFormField(
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
@@ -129,62 +138,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 20),
-                      // Password
-                      TextFormField(
-                        controller: _passwordController,
-                        obscureText: _obscurePassword,
-                        decoration: InputDecoration(
-                          labelText: 'Password',
-                          prefixIcon: const Icon(Icons.lock_outline),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          filled: true,
-                          fillColor: const Color(0xFFF7FAFC),
-                          suffixIcon: IconButton(
-                            icon: Icon(_obscurePassword
-                                ? Icons.visibility_off
-                                : Icons.visibility),
-                            onPressed: () {
-                              setState(() {
-                                _obscurePassword = !_obscurePassword;
-                              });
-                            },
-                          ),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Şifrə tələb olunur';
-                          }
-                          if (value.length < 6) {
-                            return 'Şifrə ən azı 6 simvol olmalıdır';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      // Forgot password
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.pushReplacementNamed(
-                                context, '/forgot-password');
-                          },
-                          style: TextButton.styleFrom(
-                            foregroundColor: const Color(0xFF0F6BA8),
-                            padding: EdgeInsets.zero,
-                          ),
-                          child: const Text('Forgot password?'),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      // Login button
+                      const SizedBox(height: 24),
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: authProvider.loading ? null : _onLogin,
+                          onPressed: authProvider.loading ? null : _onSubmit,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF0F6BA8),
                             foregroundColor: Colors.white,
@@ -193,7 +151,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               borderRadius: BorderRadius.circular(16),
                             ),
                             textStyle: const TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
+                                fontSize: 18, fontWeight: FontWeight.bold),
                           ),
                           child: authProvider.loading
                               ? const SizedBox(
@@ -201,23 +159,19 @@ class _LoginScreenState extends State<LoginScreen> {
                                   width: 24,
                                   child: CircularProgressIndicator(
                                       strokeWidth: 2, color: Colors.white))
-                              : const Text('Login'),
+                              : const Text('Send Reset Link'),
                         ),
                       ),
                       const SizedBox(height: 18),
-                      // Sign up
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text("Don't have an account? ",
-                              style: TextStyle(fontSize: 16)),
                           GestureDetector(
                             onTap: () {
-                              Navigator.pushReplacementNamed(
-                                  context, '/register');
+                              Navigator.pushReplacementNamed(context, '/login');
                             },
                             child: const Text(
-                              'Sign up',
+                              'Back to Login',
                               style: TextStyle(
                                 color: Color(0xFF0F6BA8),
                                 fontWeight: FontWeight.bold,
@@ -248,7 +202,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
-// Custom painter for wave effect
 class _WavePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {

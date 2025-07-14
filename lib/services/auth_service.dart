@@ -38,4 +38,32 @@ class AuthService {
       throw Exception(e.response?.data['message'] ?? 'Register failed');
     }
   }
+
+  Future<void> forgotPassword(String email) async {
+    try {
+      await ApiClient().dio.post('/forgot-password', data: {'email': email});
+    } on DioException catch (e) {
+      throw Exception(
+          e.response?.data['message'] ?? 'Failed to send reset link');
+    }
+  }
+
+  Future<void> resetPassword({
+    required String email,
+    required String token,
+    required String password,
+    required String passwordConfirmation,
+  }) async {
+    try {
+      await ApiClient().dio.post('/reset-password', data: {
+        'email': email,
+        'token': token,
+        'password': password,
+        'password_confirmation': passwordConfirmation,
+      });
+    } on DioException catch (e) {
+      throw Exception(
+          e.response?.data['message'] ?? 'Failed to reset password');
+    }
+  }
 }

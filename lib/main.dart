@@ -6,6 +6,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 import 'screens/login/login_screen.dart';
 import 'screens/register_screen.dart';
+import 'screens/forgot_password_screen.dart';
+import 'screens/reset_password_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/statistics_screen.dart';
 import 'providers/auth_provider.dart';
@@ -34,6 +36,8 @@ class JobTrackrApp extends StatelessWidget {
         routes: {
           '/login': (context) => const LoginScreen(),
           '/register': (context) => const RegisterScreen(),
+          '/forgot-password': (context) => const ForgotPasswordScreen(),
+          '/reset-password': (context) => const ResetPasswordScreen(),
           '/home': (context) => const HomeScreen(),
           '/statistics': (context) => const StatisticsScreen(),
         },
