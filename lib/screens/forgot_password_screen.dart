@@ -19,6 +19,27 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     super.dispose();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final uri = Uri.base;
+    final token = uri.queryParameters['token'];
+    final email = uri.queryParameters['email'];
+    if (token != null && email != null) {
+      // Redirect to /reset-password with params
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacementNamed(
+          context,
+          '/reset-password',
+          arguments: {
+            'token': token,
+            'email': email,
+          },
+        );
+      });
+    }
+  }
+
   Future<void> _onSubmit() async {
     if (_formKey.currentState?.validate() ?? false) {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);

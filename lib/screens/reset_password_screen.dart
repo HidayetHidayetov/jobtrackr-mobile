@@ -28,6 +28,20 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     super.dispose();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (args is Map) {
+      if (args['email'] != null) {
+        _emailController.text = args['email'];
+      }
+      if (args['token'] != null) {
+        _tokenController.text = args['token'];
+      }
+    }
+  }
+
   Future<void> _onSubmit() async {
     if (_formKey.currentState?.validate() ?? false) {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
