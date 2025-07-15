@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 
 import 'screens/login/login_screen.dart';
 import 'screens/register_screen.dart';
